@@ -1,0 +1,40 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.main_text {
+  color: #c94b4b;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  text-shadow: 0 0 1px #111;
+  display: flex;
+  flex-direction: column;
+}
+
+.h2-r,
+.h2-l {
+  font-size: 6rem;
+}
+
+.h2-r {
+  transform: rotate(270deg);
+  margin-left: -100px;
+  z-index: 10;
+}
+
+.h2-l {
+  margin-left: 100px;
+  background-color: #4b134f;
+  padding: 20px;
+  z-index: 0;
+}
+
+@media screen and (max-width: 650px) {
+  .list a {
+    font-size: 2rem;
+  }
+}
