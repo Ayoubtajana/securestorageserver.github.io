@@ -1,4 +1,55 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,minimum-scale=1">
+		<title>File Management System</title>
+		<link href="style.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer">
+	</head>
+	<body>
+        <div class="file-manager">
 
+            <div class="file-manager-header">
+                <h1><?=$current_directory?></h1>
+                <a href="create.php?directory=<?=$current_directory?>"><i class="fa-solid fa-plus"></i></a>
+            </div>
+
+            <table class="file-manager-table">
+                <thead>
+                    <tr>
+                        <td class="selected-column">Name<i class="fa-solid fa-arrow-down-long fa-xs"></i></td>
+                        <td>Size</td>
+                        <td>Modified</td>
+                        <td>Actions</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (isset($_GET['file']) && realpath($current_directory) != realpath($initial_directory)): ?>
+                    <tr>
+                        <td colspan="10" class="name"><i class="fa-solid fa-folder"></i><a href="?file=<?=urlencode($_GET['file']) . '/..'?>">...</a></td>
+                    </tr>
+                    <?php endif; ?>
+                    <?php foreach ($results as $result): ?>
+                    <tr class="file">
+                        <td class="name"><?=get_filetype_icon($result)?><a class="view-file" href="?file=<?=urlencode($result)?>"><?=basename($result)?></a></td>
+                        <td><?=is_dir($result) ? 'Folder' : convert_filesize(filesize($result))?></td>
+                        <td class="date"><?=str_replace(date('F j, Y'), 'Today,', date('F j, Y H:ia', filemtime($result)))?></td>
+                        <td class="actions">
+                            <a href="rename.php?file=<?=urlencode($result)?>" class="btn"><i class="fa-solid fa-pen fa-xs"></i></a>
+                            <a href="delete.php?file=<?=urlencode($result)?>" class="btn red" onclick="return confirm('Are you sure you want to delete <?=basename($result)?>?')"><i class="fa-solid fa-trash fa-xs"></i></a>
+                            <?php if (!is_dir($result)): ?>
+                            <a href="?file=<?=urlencode($result)?>" class="btn green"><i class="fa-solid fa-download fa-xs"></i></a>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+            
+        </div>
+    </body>
+</html>
 <?php
 // The initial directory path (e.g. /www/your_directory/)
 $initial_directory = '';
@@ -53,58 +104,7 @@ function get_filetype_icon($filetype) {
 }
 ?>
 
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="utf-8">
-        <meta name="viewport" content="width=device-width,minimum-scale=1">
-		<title>File Management System</title>
-		<link href="style.css" rel="stylesheet" type="text/css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer">
-	</head>
-	<body>
-        <div class="file-manager">
 
-            <div class="file-manager-header">
-                <h1><?=$current_directory?></h1>
-                <a href="create.php?directory=<?=$current_directory?>"><i class="fa-solid fa-plus"></i></a>
-            </div>
-
-            <table class="file-manager-table">
-                <thead>
-                    <tr>
-                        <td class="selected-column">Name<i class="fa-solid fa-arrow-down-long fa-xs"></i></td>
-                        <td>Size</td>
-                        <td>Modified</td>
-                        <td>Actions</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (isset($_GET['file']) && realpath($current_directory) != realpath($initial_directory)): ?>
-                    <tr>
-                        <td colspan="10" class="name"><i class="fa-solid fa-folder"></i><a href="?file=<?=urlencode($_GET['file']) . '/..'?>">...</a></td>
-                    </tr>
-                    <?php endif; ?>
-                    <?php foreach ($results as $result): ?>
-                    <tr class="file">
-                        <td class="name"><?=get_filetype_icon($result)?><a class="view-file" href="?file=<?=urlencode($result)?>"><?=basename($result)?></a></td>
-                        <td><?=is_dir($result) ? 'Folder' : convert_filesize(filesize($result))?></td>
-                        <td class="date"><?=str_replace(date('F j, Y'), 'Today,', date('F j, Y H:ia', filemtime($result)))?></td>
-                        <td class="actions">
-                            <a href="rename.php?file=<?=urlencode($result)?>" class="btn"><i class="fa-solid fa-pen fa-xs"></i></a>
-                            <a href="delete.php?file=<?=urlencode($result)?>" class="btn red" onclick="return confirm('Are you sure you want to delete <?=basename($result)?>?')"><i class="fa-solid fa-trash fa-xs"></i></a>
-                            <?php if (!is_dir($result)): ?>
-                            <a href="?file=<?=urlencode($result)?>" class="btn green"><i class="fa-solid fa-download fa-xs"></i></a>
-                            <?php endif; ?>
-                        </td>
-                    </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-            
-        </div>
-    </body>
-</html>
 
 
 // Navigate to directory or download file
